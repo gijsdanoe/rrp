@@ -2,7 +2,7 @@
 library(AMR)
 library(sf)
 library(tidyverse)
-#options(repos = c(CerteMedEpi = "https://certe-medical-epidemiology.r-universe.dev",options()$repos))
+options(repos = c(CerteMedEpi = "https://certe-medical-epidemiology.r-universe.dev",options()$repos))
 
 # import all data from files
 certe <- readRDS("~/OneDrive - UMCG/ABRZNN/data/Isolaten/certe_isolaten_2016_2021.rds")
@@ -77,16 +77,11 @@ data_1st <- data_1st %>% mutate(bacteriesoort = mo_name(bacteriecode))
 
 # age groups
 data_1st <- data_1st %>% mutate(leeftijdgroep = case_when(
-  leeftijd > 90 ~ 'overig',
-  leeftijd >= 81  & leeftijd <= 90 ~ '81-90',
-  leeftijd >= 71  & leeftijd <= 80 ~ '71-80',
-  leeftijd >= 61  & leeftijd <= 70 ~ '61-70',
-  leeftijd >= 51  & leeftijd <= 60 ~ '51-60',
-  leeftijd >= 41  & leeftijd <= 50 ~ '41-50',
-  leeftijd >= 31  & leeftijd <= 40 ~ '31-40',
-  leeftijd >= 21  & leeftijd <= 30 ~ '21-30',
-  leeftijd >= 11 & leeftijd <= 20 ~ '11-20',
-  leeftijd >= 0 & leeftijd <= 10 ~ '0-10'))
+  leeftijd > 65 ~ '>65',
+  leeftijd >= 18  & leeftijd <= 65 ~ '18-65',
+  leeftijd >= 12  & leeftijd <= 17 ~ '12-17',
+  leeftijd >= 4 & leeftijd <= 11 ~ '4-11',
+  leeftijd >= 0 & leeftijd <= 3 ~ '0-3'))
 
 # cleaning
 data_1st$is_esbl = as.logical(data_1st$is_esbl)

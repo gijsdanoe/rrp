@@ -21,7 +21,7 @@ library(stringr)
 
 
 data <- read.csv("data_1st.csv", sep=',')
-uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL.csv", sep=';')
+uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
 uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
 #uitgifte$YQ <- as.numeric(uitgifte$YQ)
 
@@ -30,15 +30,18 @@ ab_alpha <- sort(colnames(data)[25:100])
 options(shiny.sanitize.errors = FALSE)
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-    theme = shinytheme("lumen"),
-    navbarPage(title=div(img(src='logo.png',style="margin-top: -14px;
-                              padding-left:10px;
-                               padding-right:10px;
-                               padding-bottom:10px",
-                             height = 60)),
-               tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
-               tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
+ui <- fluidPage(theme = shinytheme("lumen"),
+                navbarPage(title = div(
+                  img(src = 'logo.png',
+                      style = "margin-top: -14px; padding-left:10px; padding-right:10px; padding-bottom:10px",
+                      height = 60),
+                  img(src = 'payoff.png',
+                      style = "margin-top: -14px; padding-left:10px; padding-right:10px; padding-bottom:10px",
+                      height = 60)
+                ),
+               #tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
+               #tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
+               #tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
                #tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
                ),
     
@@ -56,6 +59,9 @@ a(actionButton(inputId = "email1", label = " Vragen of feedback",
 
 
 server <- function(input, output, session) {
+  
+#-----------RESISTENTIE----------------------------    
+  
   
     output$resistentiepag <- renderUI(sidebarLayout(
       sidebarPanel(
@@ -145,8 +151,8 @@ server <- function(input, output, session) {
         pickerInput(
           'age',
           'Leeftijdsgroep',
-          choices=c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
-          selected = c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
+          choices=c('0-3','4-11','12-17','18-65','>65'),
+          selected = c('0-3','4-11','12-17','18-65','>65'),
           multiple = TRUE,
           pickerOptions(actionsBox = TRUE),
         ),
@@ -279,36 +285,15 @@ server <- function(input, output, session) {
             selected = 'bevat_brmo',
           ),
           
-          hr(),
-          p('Bacteriesoort:'),
           pickerInput(
-            'brmogram',
-            'Gram',
-            choices=unique(data$gram),
-            selected = unique(data$gram),
+            'brmosoort',
+            'Bacteriesoort',
+            choices=unique(data$bacteriesoort),
+            selected = unique(data$bacteriesoort),
             multiple = TRUE,
             pickerOptions(actionsBox = TRUE),
           ),
-          
-          pickerInput(
-            'brmogenus',
-            'Genus',
-            choices=unique(data$genus),
-            selected = unique(data$genus),
-            multiple = TRUE,
-            pickerOptions(actionsBox = TRUE),
-          ),
-          
-          pickerInput(
-            'brmospecies',
-            'Species',
-            choices=unique(data$species),
-            selected = unique(data$species),
-            multiple = TRUE,
-            pickerOptions(actionsBox = TRUE),
-          ),
-          hr(),
-          
+
           pickerInput(
             'brmomtrl',
             'Materiaalgroep',
@@ -347,8 +332,8 @@ server <- function(input, output, session) {
           pickerInput(
             'brmoage',
             'Leeftijdsgroepen',
-            choices=c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
-            selected = c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
+            choices=c('0-3','4-11','12-17','18-65','>65'),
+            selected = c('0-3','4-11','12-17','18-65','>65'),
             multiple = TRUE,
             pickerOptions(actionsBox = TRUE),
           ),
@@ -373,19 +358,9 @@ server <- function(input, output, session) {
     observeEvent(input$brmo, {
       data2 <- data %>% filter(get(input$brmo) == TRUE)
 
-      updatePickerInput(session = session, inputId = "brmogram",
-                        choices = unique(data2$gram),
-                        selected = unique(data2$gram)
-      )
-
-      updatePickerInput(session = session, inputId = "brmogenus",
-                        choices = unique(data2$genus),
-                        selected = unique(data2$genus)
-      )
-
-      updatePickerInput(session = session, inputId = "brmospecies",
-                        choices = unique(data2$species),
-                        selected = unique(data2$species)
+      updatePickerInput(session = session, inputId = "brmosoort",
+                        choices = unique(data2$bacteriesoort),
+                        selected = unique(data2$bacteriesoort)
       )
     })
     
@@ -490,7 +465,6 @@ server <- function(input, output, session) {
     
     output$uitgiftepag <- renderUI(sidebarLayout(
       sidebarPanel(
-        actionButton("uitbutton", "Filter"),
         
         selectInput(
           'uitgifteab',
@@ -511,8 +485,8 @@ server <- function(input, output, session) {
         pickerInput(
           'uitage',
           'Leeftijdsgroepen',
-          choices=c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
-          selected = c('0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90','overig'),
+          choices=c('0-3','4-11','12-17','18-65','>65'),
+          selected = c('0-3','4-11','12-17','18-65','>65'),
           multiple = TRUE,
           pickerOptions(actionsBox = TRUE),
         ),
@@ -526,6 +500,7 @@ server <- function(input, output, session) {
                     'Tot (jaar-kwartaal)',
                     choices = c('2016-1','2016-2','2016-3','2016-4','2017-1','2017-2','2017-3','2017-4','2018-1','2018-2','2018-3','2018-4','2019-1','2019-2','2019-3','2019-4','2020-1','2020-2','2020-3','2020-4','2021-1','2021-2','2021-3','2021-4'),
                     selected = '2021-4'),
+        actionButton("uitbutton", "Toepassen"),
                     
       ),
       mainPanel(
@@ -551,34 +526,203 @@ server <- function(input, output, session) {
       uitgifte <- uitgifte %>% dplyr::filter(uitdatum < YQ & YQ < uitdatum2)
       
       uitdata_table <<- uitgifte %>% group_by(postcode_strip) %>%
-        summarise(aantal = n()) %>%
+        summarise(dddsum = sum(ddd, na.rm=TRUE)) %>%
         full_join(select(geo_postcodes2,geometry, inwoners,postcode), by=c('postcode_strip' = 'postcode')) %>%
-        mutate(per_1000 = round((aantal / inwoners) * 1000), digits=2) %>%
         filter(postcode_strip %in% c(77,78,79) | postcode_strip >= 83)
      
       uitdata_table <<- uitdata_table[-c(17),]
       
       plot <- ggplot() + 
-        geom_sf_interactive(data=uitdata_table, aes(fill=per_1000, geometry=geometry, tooltip=sprintf("Postcode 2: %s<br/>Inwoners: %s<br/>Uitgifte: %s<br/>Uitgifte per 1000 inwoners: %s",postcode_strip,inwoners,aantal,per_1000),data_id=postcode_strip)) + 
+        geom_sf_interactive(data=uitdata_table, aes(fill=dddsum, geometry=geometry, tooltip=sprintf("Postcode 2: %s<br/>Inwoners: %s<br/>Uitgifte: %s",postcode_strip,inwoners,dddsum),data_id=postcode_strip)) + 
         coord_sf(datum = NA) + 
         theme_classic() +
-        labs(fill = "Uitgifte\nper 1000 inwoners") +
+        labs(fill = "DDD") +
         scale_fill_viridis(option='plasma', direction = 1)
       girafe(code = print(plot), width_svg = 10)
       
+
     }, ignoreNULL = FALSE)
+    
     
     output$uitplot <- renderggiraph({
       uitfilter()
     })
     
     uit_sel <- reactive({
-      uitdata_table[,c('postcode_strip','inwoners','aantal','per_1000')] %>% filter(postcode_strip %in% input$uitplot_selected) %>% kable('html', col.names = c('Postcode 2', 'Inwoners', 'Uitgifte', 'Uitgifte per 1000 inwoners')) %>% kable_styling('striped',full_width = F)
+      uitdata_table[,c('postcode_strip','inwoners','dddsum')] %>% filter(postcode_strip %in% input$uitplot_selected) %>% kable('html', col.names = c('Postcode 2', 'Inwoners', 'DDD')) %>% kable_styling('striped',full_width = F)
     })
     
     output$uit_sel <- renderText({
       uit_sel()
     })
+    
+#--------------------------------------------LIGHT------------------------------------------------------
+    
+    output$lightpag <- renderUI(sidebarLayout(
+      sidebarPanel( 
+        
+        pickerInput(
+          'lightmtrl',
+          'Materiaalsoort',
+          choices = c('Urine'='Urine', 'Bloed'='Bloed', 'Luchtweg'='Respiratoir'),
+          selected = 'Urine',
+          multiple = FALSE,
+          pickerOptions(actionsBox = TRUE),
+        ),
+        
+        pickerInput(
+          'lightsoort',
+          'Bacteriesoort',
+          choices=tail(names(sort(table(data$bacteriesoort))), 10),
+          selected = 'Escherichia coli',
+          multiple = FALSE,
+          pickerOptions(actionsBox = TRUE),
+        ),
+        
+        pickerInput(
+          'lightab',
+          'Antibioticum',
+          choices=ab_alpha,
+          selected = 'Nitrofurantoine',
+          multiple = FALSE,
+        ),
+        
+        
+        checkboxGroupInput(
+          'lightzorglijn',
+          'Zorglijn',
+          selected = c('1e lijn', '2e lijn', '3e lijn'),
+          inline = 'TRUE',
+          choices=c('1e lijn', '2e lijn', '3e lijn'),
+        ),
+        
+        
+        radioButtons(
+          'lightschaal',
+          'Schaal',
+          selected = 'gemeente',
+          inline = 'TRUE',
+          choiceNames = c('Gemeente', 'Provincie'),
+          choiceValues = c('gemeente', 'provincie')
+        ),
+        
+        
+        checkboxGroupInput(
+          'lightgeslacht',
+          'Geslacht',
+          selected = c('M','V'),
+          inline = 'TRUE',
+          choiceNames = c('Man','Vrouw'),
+          choiceValues = c('M','V')
+        ),
+        
+        # sliderInput(inputId = 'age', label = 'Leeftijd', min = min(data$leeftijd), max = max(data$leeftijd), value = c(min(data$leeftijd),max(data$leeftijd)), step = NULL, round = FALSE,
+        #             ticks = TRUE, animate = FALSE,
+        #             width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+        #             timezone = NULL, dragRange = TRUE),
+        
+        pickerInput(
+          'lightage',
+          'Leeftijdsgroep',
+          choices=c('0-3','4-11','12-17','18-65','>65'),
+          selected = c('0-3','4-11','12-17','18-65','>65'),
+          multiple = TRUE,
+          pickerOptions(actionsBox = TRUE),
+        ),
+        
+        dateRangeInput(inputId = 'lightdatum', label = 'Periode', start = '2016-01-01', end = '2022-01-03', language = 'nl'),
+        
+        actionButton("lightbutton", "Toepassen"),
+      ),
+      mainPanel(
+        h1("Antibioticaresistentie Noord-Nederland"),
+        h4("Verhouding resistente en alle isolaten per gebied"),
+        h5("Klik op een gebied om de trend te zien"),
+        tabPanel('Dashboard',ggiraphOutput("lightresistentieplot")),
+        hr(),
+        h4("Trend antibioticaresistentie van 2016 tot 2021"),
+        tabPanel('Dashboard',ggiraphOutput("lightres_trend")),
+        tabPanel('Dashboard',htmlOutput("lightres_sel")),
+        
+      )
+    ))
+    
+    
+    lightresfilter <- eventReactive(input$lightbutton,
+                               {
+                                 data <- data %>% filter(bacteriesoort %in% input$lightsoort)
+                                 data <- data %>% filter(leeftijdgroep %in% input$lightage)
+                                 data <- data %>% filter(geslacht %in% input$lightgeslacht)
+                                 data <- data %>% filter(mtrlgroep %in% input$lightmtrl)
+                                 data <- data %>% filter(zorglijn %in% input$lightzorglijn)
+                                 
+                                 data2 <- data %>% dplyr::filter(input$lightdatum[1] < ontvangstdatum & ontvangstdatum < input$lightdatum[2])
+                                 
+                                 res_gebied <<- input$lightschaal
+                                 
+
+                                 if(input$lightschaal == 'gemeente') {lightresdata_table <<- data2 %>% group_by(gemeente) %>% 
+                                   summarise(resistance = round(resistance(get(input$lightab)),digits = 3), isolaten = n_rsi(get(input$lightab))) %>%
+                                   left_join(select(geo_gemeenten,geometry,inwoners,gemeente), by='gemeente')}
+                                 else if(input$lightschaal == 'provincie') {lightresdata_table <<- data2 %>% group_by(provincie) %>%
+                                   summarise(resistance = round(resistance(get(input$lightab)),digits = 3), isolaten=n_rsi(get(input$lightab))) %>% 
+                                   left_join(select(geo_provincies,geometry,inwoners,provincie), by='provincie')}
+                                 
+                                 lightresdata_table_trend <<- data %>% group_by(get(input$lightschaal),jaar) %>% summarise(resistance = round(resistance(get(input$lightab)),digits = 3))
+                                 colnames(lightresdata_table_trend)[1] <<- 'gebied'                                             
+                                 
+                                 names(lightresdata_table)[names(lightresdata_table) == 'gemeente' | names(lightresdata_table) == 'provincie'] <<- 'gebied'
+                                 
+                                 plot <- ggplot() + 
+                                   geom_sf_interactive(data=lightresdata_table, aes(fill=resistance, geometry=geometry, tooltip=sprintf("Gebied: %s<br/>Inwoners: %s<br/>Isolaten: %s<br/>Resistentie: %s",gebied,inwoners,isolaten,resistance),data_id=gebied)) + 
+                                   coord_sf(datum = NA) + 
+                                   theme_classic() +
+                                   labs(fill = 'Resistentie') +
+                                   scale_fill_viridis(option='plasma', direction = 1)
+                                 
+                                 girafe(code = print(plot), width_svg = 10)
+                               },
+                               ignoreNULL= FALSE
+                               
+    )
+    
+    observeEvent(input$lightmtrl, {
+      data2 <- data %>% filter(mtrlgroep == input$lightmtrl)
+      
+      updatePickerInput(session = session, inputId = "lightsoort",
+                        choices = head(names(sort(table(data2$bacteriesoort),decreasing = TRUE)), 5),
+                        selected = head(names(sort(table(data2$bacteriesoort),decreasing = TRUE)), 5)
+      )
+      
+    })
+    
+    output$lightresistentieplot <- renderggiraph({
+      lightresfilter()
+    })
+    
+    lightres_sel <- reactive({lightresdata_table[,c('gebied','inwoners','isolaten','resistance')] %>% filter(gebied %in% input$lightresistentieplot_selected) %>% kable('html', col.names = c('Gebied', 'Inwoners', 'Isolaten', 'Resistentie')) %>% kable_styling('striped',full_width = F)})
+    
+    output$lightres_sel <- renderText({
+      lightres_sel()
+    })
+    
+    lightres_trend_sel <- reactive({
+      
+      lightresdata_table_trend_sel <- lightresdata_table_trend[,c('gebied','resistance','jaar')] %>% filter(gebied %in% input$lightresistentieplot_selected)
+      lightres_trend_plot <- ggplot(data=lightresdata_table_trend_sel, aes(x=jaar, y=resistance, color=gebied)) + 
+        geom_line_interactive() + 
+        geom_point_interactive(aes(tooltip = resistance)) +
+        labs(color = 'Gebied', x = 'Jaar', y = 'Resistentie')
+      girafe(code = print(lightres_trend_plot))
+    })
+    
+    
+    # trend plot
+    
+    output$lightres_trend <- renderggiraph({
+      lightres_trend_sel()
+    })
+    
 }
 
 # Run the application 
