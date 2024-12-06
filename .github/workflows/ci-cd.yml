@@ -1,11 +1,19 @@
+name: Debug Secrets Workflow
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow when code is pushed to the 'main' branch
+
 jobs:
   debug-job:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       secrets: write
+
     steps:
       - name: Output Secrets
         run: |
-          echo "ACR Username: '${{ secrets.ACR_USERNAME }}'"
-          echo "ACR Password: '${{ secrets.ACR_PASSWORD }}'"
+          echo "ACR_USERNAME: '${{ secrets.ACR_USERNAME }}'"
+          echo "ACR_PASSWORD: '${{ secrets.ACR_PASSWORD }}'"
