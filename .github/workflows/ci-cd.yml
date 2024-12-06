@@ -12,6 +12,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      secrets: write
+
+
     steps:
     # Step 1: Checkout the code from the GitHub repository
     - name: Checkout Code
