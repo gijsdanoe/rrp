@@ -1,32 +1,15 @@
-name: CI/CD for R Dashboard
+name: Minimal Debug Workflow
 
 on:
   push:
     branches:
-      - main  # Trigger workflow on push to the 'main' branch
-  pull_request:
-    branches:
-      - main  # Trigger workflow on pull requests to 'main'
+      - main
 
 jobs:
-  build-and-deploy:
+  debug-job:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      secrets: write
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Debug Secrets
+      - name: Output Secrets
         run: |
-          echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
-          echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
-
-      - name: Log in to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: resistentieprofielacr.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          echo "ACR Username: '${{ secrets.ACR_USERNAME }}'"
+          echo "ACR Password: '${{ secrets.ACR_PASSWORD }}'"
