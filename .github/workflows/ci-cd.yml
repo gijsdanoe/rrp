@@ -17,6 +17,11 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Debug Secrets
+      run: |
+        echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
+        echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
+
     # Step 2: Log in to Azure Container Registry (ACR)
     - name: Log in to ACR
       uses: azure/docker-login@v1
@@ -39,9 +44,6 @@ jobs:
         slot-name: production
         images: resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
 
-    - name: Debug Secrets
-      run: |
-        echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
-        echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
+
 
 
