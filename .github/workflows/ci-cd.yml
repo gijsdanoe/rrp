@@ -1,13 +1,9 @@
-name: Minimal Debug Workflow
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
   debug-job:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      secrets: write
     steps:
       - name: Output Secrets
         run: |
