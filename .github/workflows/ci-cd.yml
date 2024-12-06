@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    secrets: inherit
+    environment: rrp
     steps:
     # Step 1: Checkout the code from the GitHub repository
     - name: Checkout Code
