@@ -11,49 +11,44 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       secrets: write
 
-
     steps:
-    # Step 1: Checkout the code from the GitHub repository
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      # Step 1: Checkout the code from the GitHub repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Debug Secrets
-      run: |
-        echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
-        echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
+      # Debug step: Check if secrets are passed
+      - name: Debug Secrets
+        run: |
+          echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
+          echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
 
-    - name: Debug GitHub Token
-      run: |
-        echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
+      # Debug step: Check GitHub token
+      - name: Debug GitHub Token
+        run: |
+          echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
 
+      # Step 2: Log in to Azure Container Registry (ACR)
+      - name: Log in to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: resistentieprofielacr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-    # Step 2: Log in to Azure Container Registry (ACR)
-    - name: Log in to ACR
-      uses: azure/docker-login@v1
-      with:
-        login-server: resistentieprofielacr.azurecr.io
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+      # Step 3: Build and Push the Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }} .
+          docker push resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
 
-    # Step 3: Build and Push the Docker Image
-    - name: Build and Push Docker Image
-      run: |
-        docker build -t resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }} .
-        docker push resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
-
-    # Step 4: Deploy to Azure Web App
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: resistentieprofiel
-        slot-name: production
-        images: resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
-
-
-
-
+      # Step 4: Deploy to Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: resistentieprofiel
+          slot-name: production
+          images: resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
