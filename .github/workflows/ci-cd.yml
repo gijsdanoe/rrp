@@ -23,7 +23,8 @@ jobs:
         echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
 
     - name: Debug GitHub Token
-      run: echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
 
 
     # Step 2: Log in to Azure Container Registry (ACR)
