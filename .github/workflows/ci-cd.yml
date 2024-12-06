@@ -39,3 +39,8 @@ jobs:
         slot-name: production
         images: resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
 
+- name: Debug Secrets
+  run: |
+    echo "ACR Username: ${{ secrets.ACR_USERNAME }}"
+    echo "ACR Password: ${{ secrets.ACR_PASSWORD }}"
+
