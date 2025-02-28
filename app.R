@@ -40,7 +40,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                       height = 60)
                 ),
                tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
-               tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
+               #tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
                tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
                #tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
                ),
