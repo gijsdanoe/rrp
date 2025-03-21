@@ -20,9 +20,9 @@ library(kableExtra)
 library(stringr)
 
 
-data <- read.csv("data_1st.csv", sep=',')
-uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
-uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
+data <- read.csv("data/data_1st.csv", sep=',')
+#uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
+#uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
 #uitgifte$YQ <- as.numeric(uitgifte$YQ)
 
 ab_alpha <- sort(colnames(data)[25:100])
@@ -165,10 +165,10 @@ server <- function(input, output, session) {
         h1("Antibioticaresistentie Noord-Nederland"),
         h4("Verhouding resistente en alle isolaten per gebied"),
         h5("Klik op een gebied om de trend te zien"),
-        tabPanel('Resistentie',ggiraphOutput("resistentieplot")),
+        tabPanel('Resistentie',girafeOutput("resistentieplot")),
         hr(),
         h4("Trend antibioticaresistentie van 2016 tot 2021"),
-        tabPanel('Resistentie',ggiraphOutput("res_trend")),
+        tabPanel('Resistentie',girafeOutput("res_trend")),
         tabPanel('Resistentie',htmlOutput("res_sel")),
         
       )
@@ -246,7 +246,7 @@ server <- function(input, output, session) {
       
     )
     
-    output$resistentieplot <- renderggiraph({
+    output$resistentieplot <- renderGirafe({
       resfilter()
     })
     
@@ -269,7 +269,7 @@ server <- function(input, output, session) {
     
     # trend plot
     
-    output$res_trend <- renderggiraph({
+    output$res_trend <- renderGirafe({
       res_trend_sel()
     })
     
@@ -347,10 +347,10 @@ server <- function(input, output, session) {
           h1("BRMO's Noord-Nederland"),
           h4("Percentage Bijzonder Resistente Micro-Organismen in isolaten per gebied"),
           h5("Klik op een gebied om de trend te zien"),
-          tabPanel('BRMO',ggiraphOutput("brmoplot")),
+          tabPanel('BRMO',girafeOutput("brmoplot")),
           hr(),
           h4("Trend BRMO's van 2016 tot 2021"),
-          tabPanel('BRMO',ggiraphOutput("brmo_trend")),
+          tabPanel('BRMO',girafeOutput("brmo_trend")),
           tabPanel('BRMO',htmlOutput("brmo_sel"))
         )
     ))
@@ -433,7 +433,7 @@ server <- function(input, output, session) {
       girafe(code = print(plot), width_svg = 10)
     }, ignoreNULL = FALSE)
     
-    output$brmoplot <- renderggiraph({
+    output$brmoplot <- renderGirafe({
       brmofilter()
       })
     
@@ -457,7 +457,7 @@ server <- function(input, output, session) {
     
     # trend plot
     
-    output$brmo_trend <- renderggiraph({
+    output$brmo_trend <- renderGirafe({
       brmo_trend_sel()
     })
     
@@ -504,7 +504,7 @@ server <- function(input, output, session) {
                     
       ),
       mainPanel(
-        tabPanel('Uitgifte',ggiraphOutput("uitplot")),
+        tabPanel('Uitgifte',girafeOutput("uitplot")),
         #tabPanel('BRMO',downloadButton('download',"Download data")),
         tabPanel('Uitgifte',htmlOutput("uit_sel"))
       )
@@ -544,7 +544,7 @@ server <- function(input, output, session) {
     }, ignoreNULL = FALSE)
     
     
-    output$uitplot <- renderggiraph({
+    output$uitplot <- renderGirafe({
       uitfilter()
     })
     
@@ -638,10 +638,10 @@ server <- function(input, output, session) {
         h1("Antibioticaresistentie Noord-Nederland"),
         h4("Verhouding resistente en alle isolaten per gebied"),
         h5("Klik op een gebied om de trend te zien"),
-        tabPanel('Dashboard',ggiraphOutput("lightresistentieplot")),
+        tabPanel('Dashboard',girafeOutput("lightresistentieplot")),
         hr(),
         h4("Trend antibioticaresistentie van 2016 tot 2021"),
-        tabPanel('Dashboard',ggiraphOutput("lightres_trend")),
+        tabPanel('Dashboard',girafeOutput("lightres_trend")),
         tabPanel('Dashboard',htmlOutput("lightres_sel")),
         
       )
@@ -696,7 +696,7 @@ server <- function(input, output, session) {
       
     })
     
-    output$lightresistentieplot <- renderggiraph({
+    output$lightresistentieplot <- renderGirafe({
       lightresfilter()
     })
     
@@ -719,7 +719,7 @@ server <- function(input, output, session) {
     
     # trend plot
     
-    output$lightres_trend <- renderggiraph({
+    output$lightres_trend <- renderGirafe({
       lightres_trend_sel()
     })
     

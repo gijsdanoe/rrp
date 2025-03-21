@@ -18,17 +18,13 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Debug Secrets
-      run: |
-        echo "ACR Username: ${{ secrets.USERNAME }}"
-        echo "ACR Password: ${{ secrets.PASSWORD }}"
+    # Step 2: Log in to Azure
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Debug GitHub Token
-      run: |
-        echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
-
-
-    # Step 2: Log in to Azure Container Registry (ACR)
+    # Step 3: Log in to Azure Container Registry (ACR)
     - name: Log in to ACR
       uses: azure/docker-login@v1
       with:
@@ -36,20 +32,16 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
 
-    # Step 3: Build and Push the Docker Image
+    # Step 4: Build and Push the Docker Image
     - name: Build and Push Docker Image
       run: |
         docker build -t resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }} .
         docker push resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
 
-    # Step 4: Deploy to Azure Web App
+    # Step 5: Deploy to Azure Web App
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: resistentieprofiel
         slot-name: production
         images: resistentieprofielacr.azurecr.io/myshinyapp:${{ github.sha }}
-
-
-
-
