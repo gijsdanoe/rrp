@@ -39,9 +39,9 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                       style = "margin-top: -14px; padding-left:10px; padding-right:10px; padding-bottom:10px",
                       height = 60)
                 ),
-               tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
-               #tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
-               tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
+               #tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
+               tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
+               #tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
                #tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
                ),
     
