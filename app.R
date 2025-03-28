@@ -21,9 +21,9 @@ library(stringr)
 
 
 data <- readRDS("data/data_1st.rds")
-#uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
-#uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
-#uitgifte$YQ <- as.numeric(uitgifte$YQ)
+uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
+uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
+uitgifte$YQ <- as.numeric(uitgifte$YQ)
 
 ab_alpha <- sort(colnames(data)[25:100])
 
@@ -41,8 +41,8 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                 ),
                #tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
                tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
-               #tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
-               #tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
+               tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
+               tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
                ),
     
 
