@@ -529,8 +529,9 @@ server <- function(input, output, session) {
                     
       ),
       mainPanel(
+        h1("Antibiotica-uitgifte Noord-Nederland"),
+        h4("DDD per gebied"),
         tabPanel('Uitgifte',girafeOutput("uitplot")),
-        #tabPanel('BRMO',downloadButton('download',"Download data")),
         tabPanel('Uitgifte',htmlOutput("uit_sel"))
       )
     ))
@@ -582,6 +583,8 @@ server <- function(input, output, session) {
     output$uit_sel <- renderText({
       uit_sel()
     })
+    
+    
     
 #--------------------------------------------LIGHT------------------------------------------------------
     
