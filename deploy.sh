@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# run:
+'''
+chmod +x deploy.sh
+./deploy.sh
+'''
+
+
 # ----------------------
 # CONFIGURE THIS SECTION
 # ----------------------
@@ -56,7 +63,15 @@ if [ $? -ne 0 ]; then
 fi
 
 # ----------------------
-# 4. PUSH CHANGES TO GITHUB
+# 4. RESTART AZURE WEB APP
+# ----------------------
+
+az webapp restart \
+  --name resistentieprofiel \
+  --resource-group resistentieprofiel
+
+# ----------------------
+# 5. PUSH CHANGES TO GITHUB
 # ----------------------
 
 echo "📦 Adding and pushing changes to GitHub..."

@@ -20,7 +20,7 @@ library(kableExtra)
 library(stringr)
 
 
-data <- read.csv("data/data_1st.csv", sep=',')
+data <- readRDS("data/data_1st.rds")
 #uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
 #uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
 #uitgifte$YQ <- as.numeric(uitgifte$YQ)
