@@ -21,7 +21,7 @@ library(stringr)
 
 
 data <- readRDS("data/data_1st.rds")
-uitgifte <- read.csv("Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
+uitgifte <- read.csv("data/Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
 uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
 uitgifte$YQ <- as.numeric(uitgifte$YQ)
 
