@@ -22,8 +22,9 @@ library(stringr)
 
 data <- readRDS("data/data_1st.rds")
 uitgifte <- read.csv("data/Complete_dataset_antibiotica_NoordNL_vs_ddd.csv", sep=';')
-uitgifte$YQ <- paste(uitgifte$jaar, uitgifte$kwartaal, sep = '-')
+uitgifte$YQ <- paste0(uitgifte$jaar, uitgifte$kwartaal)
 uitgifte$YQ <- as.numeric(uitgifte$YQ)
+
 
 ab_alpha <- sort(colnames(data)[25:100])
 
@@ -41,7 +42,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                 ),
                #tabPanel('Dashboard', fluid=TRUE,uiOutput('lightpag')),
                tabPanel('Resistentie', fluid=TRUE,uiOutput('resistentiepag')),
-               tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
+               #tabPanel('BRMO', fluid=TRUE, uiOutput('brmopag')),
                tabPanel('Uitgifte', fluid=TRUE, uiOutput('uitgiftepag')),
                ),
     
@@ -485,11 +486,35 @@ server <- function(input, output, session) {
         pickerInput(
           'uitage',
           'Leeftijdsgroepen',
-          choices=c('0-3','4-11','12-17','18-65','>65'),
-          selected = c('0-3','4-11','12-17','18-65','>65'),
+          choices = c(
+            '0-10j',
+            '11-20j',
+            '21-30j',
+            '31-40j',
+            '41-50j',
+            '51-60j',
+            '61-70j',
+            '71-80j',
+            '81-90j',
+            'overig'
+          ),
+          selected = c(
+            '0-10j',
+            '11-20j',
+            '21-30j',
+            '31-40j',
+            '41-50j',
+            '51-60j',
+            '61-70j',
+            '71-80j',
+            '81-90j',
+            'overig'
+          ),
           multiple = TRUE,
-          pickerOptions(actionsBox = TRUE),
+          pickerOptions(actionsBox = TRUE)
         ),
+        
+        
         
         pickerInput('uitdatum',
                     'Van (jaar-kwartaal)',
@@ -516,6 +541,7 @@ server <- function(input, output, session) {
       uitgifte <- uitgifte %>% dplyr::filter(geslacht %in% input$uitgeslacht)
       uitgifte <- uitgifte %>% dplyr::filter(atc_5_omschrijving %in% input$uitgifteab)
       
+      
       uitdatum <- gsub("-", "", input$uitdatum)
       uitdatum <- as.numeric(uitdatum)
       uitdatum2 <- gsub("-", "", input$uitdatum2)
@@ -524,6 +550,7 @@ server <- function(input, output, session) {
       uitgifte$YQ <- as.numeric(uitgifte$YQ)
       
       uitgifte <- uitgifte %>% dplyr::filter(uitdatum < YQ & YQ < uitdatum2)
+      
       
       uitdata_table <<- uitgifte %>% group_by(postcode_strip) %>%
         summarise(dddsum = sum(ddd, na.rm=TRUE)) %>%
