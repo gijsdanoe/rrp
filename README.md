@@ -13,4 +13,4 @@ Data:
 - postcodes.rds: geografische referentiedata
 - mtrlgroepen.csv: materiaalgroepen van elke code gebruikt door Certe, Izore en UMCG
 
-Bekijk het dashboard online op: https://abrznn.shinyapps.io/ResistentieProfiel/
+Bekijk het dashboard online op: https://resistentieprofiel.azurewebsites.net/
